@@ -16,4 +16,4 @@ ALTER TABLE permits
 ADD COLUMN parcel_id VARCHAR(50) NOT NULL AFTER address;
 
 ALTER TABLE permits
-ADD COLUMN parcel_id VARCHAR(50) NOT NULL AFTER address;
+DROP COLUMN project_name;
