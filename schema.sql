@@ -11,3 +11,6 @@ CREATE TABLE permits (
     expiration_date DATE,
     inspector_notes TEXT
 );
+
+ALTER TABLE permits
+ADD COLUMN parcel_id VARCHAR(50) NOT NULL AFTER address;
