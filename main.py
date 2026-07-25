@@ -70,6 +70,8 @@ def listar_permits():
     conexao.close()
 
 
+# Update "U" do CRUD
+
 def atualizar_permit_number():
     id_permit = input("ID do permit que deseja atualizar: ")
     novo_permit_number = input("Novo Permit Number: ")
@@ -95,5 +97,32 @@ def atualizar_permit_number():
     cursor.close()
     conexao.close()
 
+
+def cancelar_permit():
+    id_permit = input("ID do permit que deseja cancelar: ")
+
+    conexao = conectar()
+    cursor = conexao.cursor()
+
+    query = """
+        UPDATE permits
+        SET status = 'cancelled'
+        WHERE id = %s
+    """
+    valores = (id_permit,)
+
+    cursor.execute(query, valores)
+    conexao.commit()
+
+    if cursor.rowcount == 0:
+        print("Esse ID não existe. Por favor, insira um ID válido.")
+    else:
+        print("Permit cancelado com sucesso.")
+
+    cursor.close()
+    conexao.close()
+
+# Roda a funcao: 
+
 if __name__ == "__main__":
-    atualizar_permit_number()
+    cancelar_permit()
