@@ -20,3 +20,6 @@ DROP COLUMN project_name;
 
 ALTER TABLE permits
 ADD COLUMN status VARCHAR(30) NOT NULL DEFAULT 'submitted' AFTER permit_type;
+
+ALTER TABLE permits
+ADD COLUMN permit_number VARCHAR(50) NOT NULL UNIQUE AFTER id;
