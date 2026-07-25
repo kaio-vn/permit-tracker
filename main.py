@@ -2,6 +2,7 @@ import mysql.connector
 from dotenv import load_dotenv
 import os
 from datetime import date
+from mysql.connector import IntegrityError
 
 load_dotenv()
 
@@ -75,27 +76,71 @@ def listar_permits():
 
 # Update "U" do CRUD
 
-def atualizar_permit_number():
+def atualizar_permit():
     id_permit = input("ID do permit que deseja atualizar: ")
-    novo_permit_number = input("Novo Permit Number: ")
 
     conexao = conectar()
     cursor = conexao.cursor()
 
-    query = """
-        UPDATE permits
-        SET permit_number = %s
-        WHERE id = %s
-    """
-    valores = (novo_permit_number, id_permit)
+    cursor.execute("SELECT status FROM permits WHERE id = %s", (id_permit,))
+    resultado = cursor.fetchone()
 
-    cursor.execute(query, valores)
-    conexao.commit()
-
-    if cursor.rowcount == 0:
+    if resultado is None:
         print("Esse ID não existe. Por favor, insira um ID válido.")
+        cursor.close()
+        conexao.close()
+        return
+
+    status_atual = resultado[0]
+
+    if status_atual == "cancelled":
+        print("Esse permit já foi cancelado e não pode ser atualizado.")
+        cursor.close()
+        conexao.close()
+        return
+
+    print("\nO que deseja atualizar?")
+    print("1 - Permit Number")
+    print("2 - Aprovar permit (define data de aprovação como hoje)")
+    print("3 - Data de expiração")
+    print("4 - Notas do inspetor")
+
+    opcao = input("Escolha uma opção: ")
+
+    campos = {
+        "1": "permit_number",
+        "2": "approval_date",
+        "3": "expiration_date",
+        "4": "inspector_notes"
+    }
+
+    coluna = campos.get(opcao)
+
+    if coluna is None:
+        print("Opção inválida.")
+        cursor.close()
+        conexao.close()
+        return
+
+    if opcao == "2":
+        novo_valor = date.today()
+    elif opcao == "3":
+        novo_valor = input("Nova data de expiração (AAAA-MM-DD): ")
+    elif opcao == "4":
+        novo_valor = input("Nova nota do inspetor: ")
     else:
-        print(f"Permit atualizado com sucesso!")
+        novo_valor = input("Novo Permit Number: ")
+
+    query = f"UPDATE permits SET {coluna} = %s WHERE id = %s"
+    valores = (novo_valor, id_permit)
+
+    try:
+        cursor.execute(query, valores)
+        conexao.commit()
+        print("Permit atualizado com sucesso!")
+
+    except IntegrityError:
+        print("Esse Permit Number já está em uso. Escolha um número diferente.")
 
     cursor.close()
     conexao.close()
@@ -108,6 +153,23 @@ def cancelar_permit():
     conexao = conectar()
     cursor = conexao.cursor()
 
+    cursor.execute("SELECT status FROM permits WHERE id = %s", (id_permit,))
+    resultado = cursor.fetchone()
+
+    if resultado is None:
+        print("Esse ID não existe. Por favor, insira um ID válido.")
+        cursor.close()
+        conexao.close()
+        return
+
+    status_atual = resultado[0]
+
+    if status_atual == "cancelled":
+        print("Esse permit já foi cancelado anteriormente.")
+        cursor.close()
+        conexao.close()
+        return
+
     query = """
         UPDATE permits
         SET status = 'cancelled'
@@ -118,10 +180,7 @@ def cancelar_permit():
     cursor.execute(query, valores)
     conexao.commit()
 
-    if cursor.rowcount == 0:
-        print("Esse ID não existe. Por favor, insira um ID válido.")
-    else:
-        print("Permit cancelado com sucesso.")
+    print("Permit cancelado com sucesso.")
 
     cursor.close()
     conexao.close()
@@ -133,7 +192,7 @@ if __name__ == "__main__":
         print("\nO que deseja fazer agora?")
         print("1 - Cadastrar novo permit")
         print("2 - Visualizar permits cadastrados")
-        print("3 - Atualizar permit number")
+        print("3 - Atualizar permit")
         print("4 - Cancelar permit")
         print("5 - Sair")
 
@@ -144,7 +203,7 @@ if __name__ == "__main__":
         elif opcao == "2":
             listar_permits()
         elif opcao == "3":
-            atualizar_permit_number()
+            atualizar_permit()
         elif opcao == "4":
             cancelar_permit()
         elif opcao == "5":
