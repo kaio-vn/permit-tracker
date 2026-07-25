@@ -16,7 +16,7 @@ def conectar():
     )
     return conexao
 
-# Criando funcao de cadastrar permit
+# Criando funcao de cadastrar permit - "C" DO CRUD
 
 def cadastrar_permit():
     address = input("Endereco: ")
@@ -41,6 +41,21 @@ def cadastrar_permit():
     cursor.close()
     conexao.close()
 
+def listar_permits():
+    conexao = conectar()
+    cursor = conexao.cursor()
+
+    query = "SELECT * FROM permits"
+    cursor.execute(query)
+
+    resultados = cursor.fetchall()
+
+    for permit in resultados:
+        print(permit)
+
+    cursor.close()
+    conexao.close()
+
 
 if __name__ == "__main__":
-    cadastrar_permit()
+    listar_permits()

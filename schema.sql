@@ -17,3 +17,6 @@ ADD COLUMN parcel_id VARCHAR(50) NOT NULL AFTER address;
 
 ALTER TABLE permits
 DROP COLUMN project_name;
+
+ALTER TABLE permits
+ADD COLUMN status VARCHAR(30) NOT NULL DEFAULT 'submitted' AFTER permit_type;
