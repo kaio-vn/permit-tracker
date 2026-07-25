@@ -19,6 +19,7 @@ def conectar():
 # Criando funcao de cadastrar permit - "C" DO CRUD
 
 def cadastrar_permit():
+    permit_number = input("Permit Number: ")
     address = input("Endereco: ")
     parcel_id = input("Parcel ID: ")
     permit_type = input("Tipo de permit (building, demolition): ")
@@ -28,10 +29,10 @@ def cadastrar_permit():
     cursor = conexao.cursor()
 
     query = """
-        INSERT INTO permits (address, parcel_id, permit_type, submitted_date)
-        VALUES (%s, %s, %s, %s)
+        INSERT INTO permits (permit_number, address, parcel_id, permit_type, submitted_date)
+        VALUES (%s, %s, %s, %s, %s)
     """
-    valores = (address, parcel_id, permit_type, submitted_date)
+    valores = (permit_number, address, parcel_id, permit_type, submitted_date)
 
     cursor.execute(query, valores)
     conexao.commit()
@@ -40,6 +41,8 @@ def cadastrar_permit():
 
     cursor.close()
     conexao.close()
+
+# Funcao de READ "R" do CRUD
 
 def listar_permits():
     conexao = conectar()
@@ -51,8 +54,9 @@ def listar_permits():
     resultados = cursor.fetchall()
 
     for permit in resultados:
-        id, address, parcel_id, permit_type, status, submitted_date, approval_date, expiration_date, inspector_notes = permit
+        id, permit_number, address, parcel_id, permit_type, status, submitted_date, approval_date, expiration_date, inspector_notes = permit
         print(f"ID: {id}")
+        print(f"Permit Number: {permit_number}")
         print(f"Endereço: {address}")
         print(f"Parcel ID: {parcel_id}")
         print(f"Tipo: {permit_type}")
@@ -68,4 +72,4 @@ def listar_permits():
 
 
 if __name__ == "__main__":
-    listar_permits()
+    cadastrar_permit()
