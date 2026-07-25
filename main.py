@@ -51,7 +51,17 @@ def listar_permits():
     resultados = cursor.fetchall()
 
     for permit in resultados:
-        print(permit)
+        id, address, parcel_id, permit_type, status, submitted_date, approval_date, expiration_date, inspector_notes = permit
+        print(f"ID: {id}")
+        print(f"Endereço: {address}")
+        print(f"Parcel ID: {parcel_id}")
+        print(f"Tipo: {permit_type}")
+        print(f"Status: {status}")
+        print(f"Data de submissão: {submitted_date}")
+        print(f"Data de aprovação: {approval_date}")
+        print(f"Data de expiração: {expiration_date}")
+        print(f"Notas: {inspector_notes}")
+        print("-" * 30)
 
     cursor.close()
     conexao.close()
