@@ -100,6 +100,7 @@ def atualizar_permit_number():
     cursor.close()
     conexao.close()
 
+# Delete "D" do CRUD
 
 def cancelar_permit():
     id_permit = input("ID do permit que deseja cancelar: ")
