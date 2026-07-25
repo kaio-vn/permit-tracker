@@ -19,7 +19,6 @@ def conectar():
 # Criando funcao de cadastrar permit - "C" DO CRUD
 
 def cadastrar_permit():
-    permit_number = input("Permit Number: ")
     address = input("Endereco: ")
     parcel_id = input("Parcel ID: ")
     permit_type = input("Tipo de permit (building, demolition): ")
@@ -29,10 +28,10 @@ def cadastrar_permit():
     cursor = conexao.cursor()
 
     query = """
-        INSERT INTO permits (permit_number, address, parcel_id, permit_type, submitted_date)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO permits (address, parcel_id, permit_type, submitted_date)
+        VALUES (%s, %s, %s, %s)
     """
-    valores = (permit_number, address, parcel_id, permit_type, submitted_date)
+    valores = (address, parcel_id, permit_type, submitted_date)
 
     cursor.execute(query, valores)
     conexao.commit()
