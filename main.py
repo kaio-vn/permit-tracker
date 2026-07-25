@@ -52,19 +52,22 @@ def listar_permits():
 
     resultados = cursor.fetchall()
 
-    for permit in resultados:
-        id, permit_number, address, parcel_id, permit_type, status, submitted_date, approval_date, expiration_date, inspector_notes = permit
-        print(f"ID: {id}")
-        print(f"Permit Number: {permit_number}")
-        print(f"Endereço: {address}")
-        print(f"Parcel ID: {parcel_id}")
-        print(f"Tipo: {permit_type}")
-        print(f"Status: {status}")
-        print(f"Data de submissão: {submitted_date}")
-        print(f"Data de aprovação: {approval_date}")
-        print(f"Data de expiração: {expiration_date}")
-        print(f"Notas: {inspector_notes}")
-        print("-" * 30)
+    if not resultados:
+        print("Não há nenhum permit cadastrado no sistema.")
+    else:
+        for permit in resultados:
+            id, permit_number, address, parcel_id, permit_type, status, submitted_date, approval_date, expiration_date, inspector_notes = permit
+            print(f"ID: {id}")
+            print(f"Permit Number: {permit_number}")
+            print(f"Endereço: {address}")
+            print(f"Parcel ID: {parcel_id}")
+            print(f"Tipo: {permit_type}")
+            print(f"Status: {status}")
+            print(f"Data de submissão: {submitted_date}")
+            print(f"Data de aprovação: {approval_date}")
+            print(f"Data de expiração: {expiration_date}")
+            print(f"Notas: {inspector_notes}")
+            print("-" * 30)
 
     cursor.close()
     conexao.close()
@@ -125,4 +128,26 @@ def cancelar_permit():
 # Roda a funcao: 
 
 if __name__ == "__main__":
-    cancelar_permit()
+    while True:
+        print("\nO que deseja fazer agora?")
+        print("1 - Cadastrar novo permit")
+        print("2 - Visualizar permits cadastrados")
+        print("3 - Atualizar permit number")
+        print("4 - Cancelar permit")
+        print("5 - Sair")
+
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            cadastrar_permit()
+        elif opcao == "2":
+            listar_permits()
+        elif opcao == "3":
+            atualizar_permit_number()
+        elif opcao == "4":
+            cancelar_permit()
+        elif opcao == "5":
+            print("Encerrando o programa.")
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
