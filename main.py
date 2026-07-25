@@ -70,5 +70,30 @@ def listar_permits():
     conexao.close()
 
 
+def atualizar_permit_number():
+    id_permit = input("ID do permit que deseja atualizar: ")
+    novo_permit_number = input("Novo Permit Number: ")
+
+    conexao = conectar()
+    cursor = conexao.cursor()
+
+    query = """
+        UPDATE permits
+        SET permit_number = %s
+        WHERE id = %s
+    """
+    valores = (novo_permit_number, id_permit)
+
+    cursor.execute(query, valores)
+    conexao.commit()
+
+    if cursor.rowcount == 0:
+        print("Esse ID não existe. Por favor, insira um ID válido.")
+    else:
+        print(f"Permit atualizado com sucesso!")
+
+    cursor.close()
+    conexao.close()
+
 if __name__ == "__main__":
-    cadastrar_permit()
+    atualizar_permit_number()
